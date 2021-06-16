@@ -1,0 +1,84 @@
+Database schema
+
+CREATE TABLE post_address_mapping (
+                        id serial PRIMARY KEY,
+                         post_number INTEGER NOT NULL,
+                         account_index INTEGER NOT NULL,
+                         address_index INTEGER NOT NULL,
+                         subaddress varchar(95) NOT NULL,
+                         UNIQUE (post_number, account_index, address_index, subaddress)
+);
+
+CREATE TABLE scan_progress (
+                        id serial PRIMARY KEY,
+                         type varchar NOT NULL,
+                         scanned_up_to_id INTEGER NOT NULL,
+
+);
+
+INSERT INTO scan_progress (type, scanned_up_to_id)
+VALUES ('post', 0);
+;
+
+Program definition / pseudo code
+
+PROGRAM #1 api-key is passed for authentication
+
+Post submitted => Bot adds a comment for people to add to the bounty with a sub address
+
+Trigger: cron job runs at a set interval
+
+// fider doesn't support paging
+
+post = GET <baseURL>/api/v1/posts?view=recent&limit=1
+
+scanned_up_to_id = SELECT scanned_up_to_id FROM scan_progress where type="post"
+
+number_of_unprocessed_posts = post.number - scanned_up_to_id
+
+unprocessed_posts = GET <baseURL>/api/v1/posts?view=recent&limit=number_of_unprocessed_posts
+
+for post in unprocessed_posts
+  bounty_funding_address = Wallet.CreateAddress
+
+
+  POST /api/v1/posts/{post.number}/comments
+  {"content":"Donate to this address bounty_funding_address.address , to fund this bounty donate. Your donation will be reflected in the comments."}
+
+UPDATE scan_progress
+SET scanned_up_to_id = scanned_up_to_id
+WHERE type = "post"
+
+INSERT INTO post_address_mapping (post_number, account_index, address_index, subaddress )
+VALUES (post.number, bounty_funding_address.account_index, bounty_funding_address.address_index, bounty_funding_address.subaddress);
+;
+
+PROGRAM #2 api-key is passed for authentication
+
+Payment sent => Bot adds a comment to inform people of the bounty being increased
+
+Trigger: tx-notify passes tx_id to Bot
+
+// get the payment associated with the tx_id
+payment = Wallet.GetPayments(tx_id=tx_id)
+// only comment if the payment is above a certain amount, to prevent comment spam
+if payment.amount > .0001
+  post_number = SELECT post_number FROM post_address_mapping WHERE account_index = payment.subaddr_index.major AND address_index = payment.subaddr_index.minor;
+
+  balance = Wallet.GetBalance("address_indices":[payment.subaddr_index.major,payment.subaddr_index.minor])
+
+  POST /api/v1/posts/{post_number}/comments
+  {"content":"Bounty increased by payment.amount XMR, Total Bounty: balance"}
+
+Additional features with lower priority
+new posts submitted will be deleted if the original poster doesn't pay a micropayment to the bounty address
+
+
+
+
+Docs used:
+https://getfider.com/docs/api#add-comment
+https://www.getmonero.org/resources/developer-guides/wallet-rpc.html
+
+
+
