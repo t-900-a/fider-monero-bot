@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/MarinX/monerorpc"
+	wallet "github.com/MarinX/monerorpc/wallet"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -40,7 +41,7 @@ func getPosts(uri string, limit float64) ([]map[string]interface{}, error) {
 
 	q := r.URL.Query()
 	q.Add("view", "recent")
-	q.Add("limit", strconv.FormatFloat(limit, 'f', 6, 64))
+	q.Add("limit", strconv.FormatFloat(limit, 'f', 0, 64))
 
 	r.URL.RawQuery = q.Encode()
 
@@ -65,9 +66,9 @@ func getPosts(uri string, limit float64) ([]map[string]interface{}, error) {
 	}
 }
 
-func comment(uri string, postNum float64, apiKey string, address string) (float64, error) {
-	method := "/api/v1/posts/" + strconv.FormatFloat(postNum, 'f', 6, 64) + "/comments"
-	strData := `{"content":"` + address + `"}`
+func comment(uri string, postNum float64, apiKey string, address *string) (float64, error) {
+	method := "/api/v1/posts/" + strconv.FormatFloat(postNum, 'f', 0, 64) + "/comments"
+	strData := `{"content":"Donate to the address below to fund this bounty \n` + *address + `\nYour donation will be reflected in the comments."}`
 	jsonData := []byte(strData)
 	u, _ := url.ParseRequestURI(uri)
 	u.Path = method
@@ -125,7 +126,7 @@ func main() {
 	rows, err := db.Query(`
 			SELECT scanned_up_to_id 
 			FROM scan_progress
-			WHERE type="post"`)
+			WHERE type='post'`)
 	if err != nil {
 		panic(err)
 	}
@@ -140,21 +141,64 @@ func main() {
 	}
 
 	numberOfUnprocessedPosts := latestPostNumf - float64(scannedUpToId)
-
-	posts, err = getPosts(uri, numberOfUnprocessedPosts)
-	if err != nil {
-		log.Println(err)
-	}
-	// need monero client and wallet to generate new addresses
-	client := monerorpc.New(monerorpc.MainnetURI, nil)
-
-	for _, post := range posts {
-		bountyFundingAddress := client.Wallet.CreateAddress()
-		postNumf, err := getFloat(post["number"])
+	if numberOfUnprocessedPosts > float64(0) {
+		posts, err = getPosts(uri, numberOfUnprocessedPosts)
 		if err != nil {
 			log.Println(err)
 		}
-		comment(uri, postNumf, apiKey, bountyFundingAddress)
-	}
 
+		// need monero client and wallet to generate new addresses
+		client := monerorpc.New(monerorpc.TestnetURI, nil)
+		var postNumi int
+		var addressReq wallet.CreateAddressRequest
+		var address string
+		var addressIndex int64
+
+		for _, post := range posts {
+			// generate new address to be associated with the post
+
+			addressReq.AccountIndex = 0
+			addressResp, err := client.Wallet.CreateAddress(&addressReq)
+
+			address = addressResp.Address
+			addressIndex = int64(addressResp.AddressIndex)
+
+			if err != nil {
+				log.Println(err)
+			}
+			postNumf, err := getFloat(post["number"])
+			postNumi = int(postNumf)
+			if err != nil {
+				log.Println(err)
+			}
+			_, err = comment(uri, postNumf, apiKey, &address)
+			if err != nil {
+				log.Println(err)
+			}
+
+		}
+
+		_, err := db.Exec(`
+		UPDATE scan_progress
+		SET scanned_up_to_id = $1
+		WHERE type = 'post'
+	`, int(postNumi))
+		if err != nil {
+			log.Println(err)
+		}
+
+		_, err = db.Exec(`
+		INSERT INTO post_address_mapping (
+		    post_number, account_index, address_index, subaddress 
+		)
+		VALUES (
+		    $1, $2, $3, $4
+		)
+		`, &postNumi, addressReq.AccountIndex, &addressIndex, &address)
+
+		if err != nil {
+			log.Println(err)
+		}
+
+	}
 }

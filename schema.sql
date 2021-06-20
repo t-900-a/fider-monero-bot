@@ -10,7 +10,7 @@ CREATE TABLE post_address_mapping (
 CREATE TABLE scan_progress (
                                id serial PRIMARY KEY,
                                type varchar NOT NULL,
-                               scanned_up_to_id INTEGER NOT NULL,
+                               scanned_up_to_id INTEGER NOT NULL
 
 );
 
