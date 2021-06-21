@@ -68,7 +68,7 @@ func getPosts(uri string, limit float64) ([]map[string]interface{}, error) {
 
 func comment(uri string, postNum float64, apiKey string, address *string) (float64, error) {
 	method := "/api/v1/posts/" + strconv.FormatFloat(postNum, 'f', 0, 64) + "/comments"
-	strData := `{"content":"Donate to the address below to fund this bounty \n` + *address + `\nYour donation will be reflected in the comments."}`
+	strData := `{"content":"Donate to the address below to fund this bounty \n` + *address + `\nYour donation will be reflected in the comments. \nPayouts will be made once the bounty is complete to the individual(s) who completed the bounty first."}`
 	jsonData := []byte(strData)
 	u, _ := url.ParseRequestURI(uri)
 	u.Path = method
