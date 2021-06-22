@@ -76,7 +76,7 @@ func main() {
 
 	incomingTransfersReq.AccountIndex = uint64(0)
 	incomingTransfersReq.TransferType = "all"
-	incomingTransfersReq.SubaddrIndices = uint64(1)
+	// this line for testing: incomingTransfersReq.SubaddrIndices = uint64(1)
 
 	client := monerorpc.New(monerorpc.TestnetURI, nil)
 	incomingTransfersResp, err = client.Wallet.IncomingTransfers(&incomingTransfersReq)
