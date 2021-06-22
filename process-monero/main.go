@@ -18,9 +18,9 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func comment(uri string, postNum int, apiKey string, subAddrBalance uint64, paymentAmt uint64) (interface{}, error) {
+func comment(uri string, postNum int, apiKey string, subAddrBalance int, paymentAmt int) (interface{}, error) {
 	method := "/api/v1/posts/" + strconv.Itoa(postNum) + "/comments"
-	strData := `{"content":"Bounty increased by ` + strconv.Itoa(int(paymentAmt)) + ` XMR\n Total Bounty: ` + strconv.Itoa(int(subAddrBalance)) + `"}`
+	strData := `{"content":"Bounty increased by ` + strconv.Itoa(paymentAmt) + ` XMR\n Total Bounty: ` + strconv.Itoa(subAddrBalance) + `"}`
 	jsonData := []byte(strData)
 	u, _ := url.ParseRequestURI(uri)
 	u.Path = method
@@ -33,6 +33,7 @@ func comment(uri string, postNum int, apiKey string, subAddrBalance uint64, paym
 
 	resp, err := client.Do(r)
 	if err != nil {
+		log.Println("line 36")
 		log.Println(err)
 	}
 
@@ -44,6 +45,7 @@ func comment(uri string, postNum int, apiKey string, subAddrBalance uint64, paym
 		var resVar map[string]interface{}
 		err = json.Unmarshal(resBytes, &resVar)
 		if err != nil {
+			log.Println("47")
 			log.Println(err)
 		}
 
@@ -66,58 +68,61 @@ func main() {
 	//tx id that is passed by tx notify
 	txId := os.Args[4]
 
-	var paymentReq wallet.GetPaymentsRequest
-	var paymentResp *wallet.GetPaymentsResponse
+	var incomingTransfersReq wallet.IncomingTransfersRequest
+	var incomingTransfersResp *wallet.IncomingTransfersResponse
+	txToBeProcessed := new(wallet.IncomingTransfer)
+	txToBeProcessed.TxHash = txId
+	bountyTotal := 0
 
-	paymentReq.PaymentID = txId
+	incomingTransfersReq.AccountIndex = uint64(0)
+	incomingTransfersReq.TransferType = "all"
+	incomingTransfersReq.SubaddrIndices = uint64(1)
 
 	client := monerorpc.New(monerorpc.TestnetURI, nil)
-	fmt.Println(txId)
-	paymentResp, err = client.Wallet.GetPayments(&paymentReq)
-	fmt.Println(paymentResp)
+	incomingTransfersResp, err = client.Wallet.IncomingTransfers(&incomingTransfersReq)
 	if err != nil {
 		log.Println(err)
 	}
 
-	// only comment if the payment is above a certain amount, to prevent comment spam
-	for _, payment := range paymentResp.Payments {
-		fmt.Println("Amount")
-		fmt.Println(payment.Amount)
-		if float64(payment.Amount) > float64(.005) {
-			// determine the post id that is associated with the incoming payment
-			rows, err := db.Query(`
+	for _, transfer := range incomingTransfersResp.Transfers {
+		fmt.Println(transfer)
+		if transfer.TxHash == txToBeProcessed.TxHash {
+			txToBeProcessed.Amount = transfer.Amount
+			txToBeProcessed.GlobalIndex = transfer.GlobalIndex
+			txToBeProcessed.KeyImage = transfer.KeyImage
+			txToBeProcessed.Spent = transfer.Spent
+			txToBeProcessed.SubaddrIndex = transfer.SubaddrIndex
+			txToBeProcessed.TxSize = transfer.TxSize
+		}
+		bountyTotal += int(transfer.Amount)
+	}
+
+	if float64(txToBeProcessed.Amount) > float64(.005) {
+		// determine the post id that is associated with the incoming payment
+		rows, err := db.Query(`
 			SELECT post_number
 			FROM post_address_mapping
 			WHERE account_index = $1
 			  AND address_index = $2`,
-				payment.SubaddrIndex.Major,
-				payment.SubaddrIndex.Minor)
-			if err != nil {
+			incomingTransfersReq.AccountIndex,
+			txToBeProcessed.SubaddrIndex)
+		if err != nil {
+			panic(err)
+		}
+
+		var (
+			postNum int
+		)
+		for rows.Next() {
+			if err := rows.Scan(&postNum); err != nil {
 				panic(err)
 			}
+		}
 
-			var (
-				postNum int
-			)
-			for rows.Next() {
-				if err := rows.Scan(&postNum); err != nil {
-					panic(err)
-				}
-			}
-
-			var balanceReq wallet.GetBalanceRequest
-			var balanceResp *wallet.GetBalanceResponse
-
-			balanceReq.AccountIndex = payment.SubaddrIndex.Major
-			balanceReq.AddressIndices = payment.SubaddrIndex.Minor
-			balanceResp, err = client.Wallet.GetBalance(&balanceReq)
-			if err != nil {
-				log.Println(err)
-			}
-			_, err = comment(uri, postNum, apiKey, balanceResp.Balance, payment.Amount)
-			if err != nil {
-				log.Println(err)
-			}
+		_, err = comment(uri, postNum, apiKey, bountyTotal, int(txToBeProcessed.Amount))
+		if err != nil {
+			log.Println("line 121")
+			log.Println(err)
 		}
 	}
 }
