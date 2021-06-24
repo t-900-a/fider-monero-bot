@@ -33,7 +33,6 @@ func comment(uri string, postNum int, apiKey string, subAddrBalance int, payment
 
 	resp, err := client.Do(r)
 	if err != nil {
-		log.Println("line 36")
 		log.Println(err)
 	}
 
@@ -45,7 +44,6 @@ func comment(uri string, postNum int, apiKey string, subAddrBalance int, payment
 		var resVar map[string]interface{}
 		err = json.Unmarshal(resBytes, &resVar)
 		if err != nil {
-			log.Println("47")
 			log.Println(err)
 		}
 
@@ -121,7 +119,6 @@ func main() {
 
 		_, err = comment(uri, postNum, apiKey, bountyTotal, int(txToBeProcessed.Amount))
 		if err != nil {
-			log.Println("line 121")
 			log.Println(err)
 		}
 	}
