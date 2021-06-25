@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/MarinX/monerorpc"
 	wallet "github.com/MarinX/monerorpc/wallet"
 	"io/ioutil"
@@ -20,7 +19,7 @@ import (
 
 func comment(uri string, postNum int, apiKey string, subAddrBalance int, paymentAmt int) (interface{}, error) {
 	method := "/api/v1/posts/" + strconv.Itoa(postNum) + "/comments"
-	strData := `{"content":"Bounty increased by ` + strconv.Itoa(paymentAmt) + ` XMR\n Total Bounty: ` + strconv.Itoa(subAddrBalance) + `"}`
+	strData := `{"content":"Bounty increased by ` + strconv.Itoa(paymentAmt) + ` XMR\n Total Bounty: ` + strconv.Itoa(subAddrBalance) + ` XMR"}`
 	jsonData := []byte(strData)
 	u, _ := url.ParseRequestURI(uri)
 	u.Path = method
@@ -70,11 +69,10 @@ func main() {
 	var incomingTransfersResp *wallet.IncomingTransfersResponse
 	txToBeProcessed := new(wallet.IncomingTransfer)
 	txToBeProcessed.TxHash = txId
-	bountyTotal := 0
+	bountyTotal := float64(0)
 
 	incomingTransfersReq.AccountIndex = uint64(0)
 	incomingTransfersReq.TransferType = "all"
-	// this line for testing: incomingTransfersReq.SubaddrIndices = uint64(1)
 
 	client := monerorpc.New(monerorpc.TestnetURI, nil)
 	incomingTransfersResp, err = client.Wallet.IncomingTransfers(&incomingTransfersReq)
@@ -82,8 +80,10 @@ func main() {
 		log.Println(err)
 	}
 
+	// there's no way to request information for a specific transaction
+	// have to request incoming transfer, then loop to find the specific transaction
+
 	for _, transfer := range incomingTransfersResp.Transfers {
-		fmt.Println(transfer)
 		if transfer.TxHash == txToBeProcessed.TxHash {
 			txToBeProcessed.Amount = transfer.Amount
 			txToBeProcessed.GlobalIndex = transfer.GlobalIndex
@@ -92,10 +92,15 @@ func main() {
 			txToBeProcessed.SubaddrIndex = transfer.SubaddrIndex
 			txToBeProcessed.TxSize = transfer.TxSize
 		}
-		bountyTotal += int(transfer.Amount)
 	}
 
-	if float64(txToBeProcessed.Amount) > float64(.005) {
+	// convert piconero to monero
+	paymentAmt := float64(txToBeProcessed.Amount) * float64(.000000000001)
+
+	// only comment for payments that are above a certain threshold.
+	// this is to avoid micropayment spam that would appear in the comments
+
+	if paymentAmt > float64(.005) {
 		// determine the post id that is associated with the incoming payment
 		rows, err := db.Query(`
 			SELECT post_number
@@ -103,7 +108,7 @@ func main() {
 			WHERE account_index = $1
 			  AND address_index = $2`,
 			incomingTransfersReq.AccountIndex,
-			txToBeProcessed.SubaddrIndex)
+			txToBeProcessed.SubaddrIndex.Minor)
 		if err != nil {
 			panic(err)
 		}
@@ -117,7 +122,14 @@ func main() {
 			}
 		}
 
-		_, err = comment(uri, postNum, apiKey, bountyTotal, int(txToBeProcessed.Amount))
+		// determine the bounty total to be included in the comments
+		for _, transfer := range incomingTransfersResp.Transfers {
+			if transfer.SubaddrIndex == txToBeProcessed.SubaddrIndex {
+				bountyTotal += float64(transfer.Amount) * float64(.000000000001)
+			}
+		}
+
+		_, err = comment(uri, postNum, apiKey, int(bountyTotal), int(paymentAmt))
 		if err != nil {
 			log.Println(err)
 		}
