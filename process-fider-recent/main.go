@@ -3,11 +3,13 @@ package main
 import (
 	"bytes"
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/MarinX/monerorpc"
 	wallet "github.com/MarinX/monerorpc/wallet"
+	qrcode "github.com/skip2/go-qrcode"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -67,8 +69,11 @@ func getPosts(uri string, limit float64) ([]map[string]interface{}, error) {
 }
 
 func comment(uri string, postNum float64, apiKey string, address *string) (float64, error) {
+	var png []byte
+	png, err := qrcode.Encode("monero:"+*address, qrcode.Medium, 200)
 	method := "/api/v1/posts/" + strconv.FormatFloat(postNum, 'f', 0, 64) + "/comments"
-	strData := `{"content":"Donate to the address below to fund this bounty \n` + *address + `\nYour donation will be reflected in the comments. \nPayouts will be made once the bounty is complete to the individual(s) who completed the bounty first."}`
+	strData := `{"content":"Donate to the address below to fund this bounty \n` + *address + `\nYour donation will be reflected in the comments. \nPayouts will be made once the bounty is complete to the individual(s) who completed the bounty first.",
+		"attachments":[{"upload":{"fileName":"post_` + strconv.FormatFloat(postNum, 'f', 0, 64) + `_qr.png","contentType":"image/png","content":"` + base64.StdEncoding.EncodeToString(png) + `"}}]}`
 	jsonData := []byte(strData)
 	u, _ := url.ParseRequestURI(uri)
 	u.Path = method
