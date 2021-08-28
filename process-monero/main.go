@@ -17,9 +17,9 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func comment(uri string, postNum int, apiKey string, subAddrBalance int, paymentAmt int) (interface{}, error) {
+func comment(uri string, postNum int, apiKey string, subAddrBalance float64, paymentAmt float64) (interface{}, error) {
 	method := "/api/v1/posts/" + strconv.Itoa(postNum) + "/comments"
-	strData := `{"content":"Bounty increased by ` + strconv.Itoa(paymentAmt) + ` XMR\n Total Bounty: ` + strconv.Itoa(subAddrBalance) + ` XMR"}`
+	strData := `{"content":"Bounty increased by ` + strconv.FormatFloat(paymentAmt, 'f', 5, 64) + ` XMR\n Total Bounty: ` + strconv.FormatFloat(subAddrBalance, 'f', 5, 64) + ` XMR"}`
 	jsonData := []byte(strData)
 	u, _ := url.ParseRequestURI(uri)
 	u.Path = method
@@ -74,7 +74,7 @@ func main() {
 	incomingTransfersReq.AccountIndex = uint64(0)
 	incomingTransfersReq.TransferType = "all"
 
-	client := monerorpc.New(monerorpc.TestnetURI, nil)
+	client := monerorpc.New(monerorpc.ProdnetURI, nil)
 	incomingTransfersResp, err = client.Wallet.IncomingTransfers(&incomingTransfersReq)
 	if err != nil {
 		log.Println(err)
@@ -129,7 +129,7 @@ func main() {
 			}
 		}
 
-		_, err = comment(uri, postNum, apiKey, int(bountyTotal), int(paymentAmt))
+		_, err = comment(uri, postNum, apiKey, bountyTotal, paymentAmt)
 		if err != nil {
 			log.Println(err)
 		}
