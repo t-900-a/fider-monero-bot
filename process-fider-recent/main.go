@@ -153,7 +153,7 @@ func main() {
 		}
 
 		// need monero client and wallet to generate new addresses
-		client := monerorpc.New(monerorpc.TestnetURI, nil)
+		client := monerorpc.New(monerorpc.ProdnetURI, nil)
 		var postNumi int
 		var addressReq wallet.CreateAddressRequest
 		var address string
