@@ -100,7 +100,7 @@ func main() {
 	// only comment for payments that are above a certain threshold.
 	// this is to avoid micropayment spam that would appear in the comments
 
-	if paymentAmt > float64(.005) {
+	if paymentAmt > float64(.00295) {
 		// determine the post id that is associated with the incoming payment
 		rows, err := db.Query(`
 			SELECT post_number
