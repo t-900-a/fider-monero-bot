@@ -1,4 +1,4 @@
-Site Description / announcement draft:
+## Site Description / announcement draft:
 
 Monero Suggestions is a website that will be used to gather feedback from Monero users, developers, and community stakeholders.
 Posting suggestions aren't limited to software development or one specific project.
@@ -10,7 +10,7 @@ By associating a bounty with a suggestion the community can incentivize / expres
 Bounties are also useful in attracting new developers that may not know specific features or Monero related projects to work on.
 Monero Suggestions acts as an escrow for the funded bounties, there are no associated platform fees and the website is administered by volunteers (whom may accept donations).
 
-Policy Document Draft:
+## Policy Document Draft:
 
 Suggestions can be submitted by anyone as long as they follow the policies and statements below.
 
