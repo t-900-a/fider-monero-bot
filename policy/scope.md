@@ -14,9 +14,10 @@ Every posted bounty will have an associated Monero subaddress generated which is
 
 ### Bounties Payout 
 
-The open nature of accepted bounties can often make defining a specific deliverable difficult. Submissions require a tightly defined deliverable which helps dictate when a submission can be considered "completed" and a bounty can be paid out. Submissions lacking a properly defined deliverable will be tagged as ("undefined")[https://bounties.monero.social/?tags=undefined] and will need community involvement to help define them. 
+The open nature of accepted bounties can often make defining a specific deliverable difficult. Submissions require a tightly defined deliverable which helps dictate when a submission can be considered ("completed")[https://bounties.monero.social/?view=completed] and a bounty can be paid out. Submissions lacking a properly defined deliverable will be tagged as ("undefined")[https://bounties.monero.social/?tags=undefined] by reviewers* and will involve any site visitor to help define the payout criteria more clearly. 
 
-
+Once the bounty is complete a comment should be left by the bounty hunter including a link to the deliverable and a statement on how each payout criteria was met. Any site visitor can leave a comment to either reaffirm or raise any concerns involving whether the bounty should be considered complete or not. Discussion will be considered on outside platforms, including Reddit and the Monero Matrix Channels.
+The reviewers* will contact the escrow holder to release funds, once consensus is reached.
 
 
 ## Bounty scope 
@@ -34,6 +35,7 @@ The open nature of accepted bounties can often make defining a specific delivera
 
 ### Out-of-Scope 
   * Funding for personal endeavors
+  * Funding for multi-year efforts that require a group of individuals
   * Funding for proprietary software
   * Funding for work that has already been completed
   * Requesting additional funding for an existing CCS that has not been completed
@@ -45,10 +47,11 @@ The open nature of accepted bounties can often make defining a specific delivera
 
 ## Funding policy 
 
-Bounties which are fully funded and accepted by a participant will remain open for a year. After one year of no shown progress the funds are released back to the parent bounties fund. The community can vote on re-opening the bounty and must pass a threshold of votes in order to be reopened. 
+Bounties which have been reviewed and accepted by  and accepted by a bountywill remain open for a year. After one year of no shown progress the funds are released back to the parent bounties fund. The community can vote on re-opening the bounty and must pass a threshold of votes in order to be reopened. 
 
 
 ## 
 
-
+## Definitions
+Reviewers = Granted the collaborator role within Fider (who though?)
 
