@@ -47,11 +47,13 @@ The reviewers* will contact the escrow holder to release funds, once consensus i
 
 ## Funding policy 
 
-Bounties which have been reviewed and accepted by  and accepted by a bountywill remain open for a year. After one year of no shown progress the funds are released back to the parent bounties fund. The community can vote on re-opening the bounty and must pass a threshold of votes in order to be reopened. 
+Bounties which have been reviewed and accepted by *reviewers and the site visitors will remain open for a year. After one year of no shown progress the funds raised for *expired bounties will be transfered to whichever bounty on the site has the most funding at that time. A comment will be added in the expired bounty that states funds were transferred to a particular bounty. Lastly, the expired bounty will be tagged as ("expired")[https://bounties.monero.social/?tags=expired].
+
+If a bounty hunter would like to work on an expired bounty, they would leave a comment and then a reviewer would remove the "expired" tag. If any funds were previously transferred out of the expired bounty to another bounty, those funds will not be relocated back to the original bounty.
 
 
-## 
 
 ## Definitions
 Reviewers = Granted the collaborator role within Fider (who though?)
+Expired bounties = bounties that have not been worked on for one year (if work is being done in stealth, progress has to be shown before a year passes)
 
