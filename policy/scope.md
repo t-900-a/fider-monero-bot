@@ -22,7 +22,7 @@ The reviewers* will contact the escrow holder to release funds, once consensus i
 
 ## Bounty scope 
 
-//todo need to add a more comprehensive scope detailing 
+If a bounty has the attributes of a [Monero CCS](https://ccs.getmonero.org/how-to-ccs/), including milestones, targeted to specific person or persons who will work the bounty, or specify a particular required funding threshold. The bounty will be rejected and the user who created the bounty will be referred to the CCS.
 
 ### In-Scope
   * Github Issues in Monero related repositories
@@ -31,18 +31,15 @@ The reviewers* will contact the escrow holder to release funds, once consensus i
   * Funding for written material related to Monero
   * Funding of new projects that are built on-top of or integrate with Monero transactions
   * Maintenance activities related to Monero related projects
-  * Funding for small teams (<5 persons), short duration (<1 year)
 
 
 ### Out-of-Scope 
   * Funding for personal endeavors
-  * Funding for multi-year efforts that require a group of individuals (>5 persons)
   * Funding for proprietary software
   * Funding for work that has already been completed
   * Requesting additional funding for an existing CCS that has not been completed
   * Funding for anything malicious or activities that could be construed as malintent towards any individuals, groups of people, or oneself
   * Funding for artistic endeavors not related to Monero
-
 
 
 
