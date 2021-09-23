@@ -31,11 +31,12 @@ The reviewers* will contact the escrow holder to release funds, once consensus i
   * Funding for written material related to Monero
   * Funding of new projects that are built on-top of or integrate with Monero transactions
   * Maintenance activities related to Monero related projects
+  * Funding for small teams (<5 persons), short duration (<1 year)
 
 
 ### Out-of-Scope 
   * Funding for personal endeavors
-  * Funding for multi-year efforts that require a group of individuals
+  * Funding for multi-year efforts that require a group of individuals (>5 persons)
   * Funding for proprietary software
   * Funding for work that has already been completed
   * Requesting additional funding for an existing CCS that has not been completed
