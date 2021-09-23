@@ -22,7 +22,7 @@ The reviewers* will contact the escrow holder to release funds, once consensus i
 
 ## Bounty scope 
 
-If a bounty has the attributes of a [Monero CCS](https://ccs.getmonero.org/how-to-ccs/), including milestones, targeted to specific person or persons who will work the bounty, or specify a particular required funding threshold. The bounty will be rejected and the user who created the bounty will be referred to the CCS.
+If a bounty has the attributes of a [Monero CCS](https://ccs.getmonero.org/how-to-ccs/), including milestones, targeted to specific person or persons who will work the bounty, or specify a particular required funding threshold; the bounty will be rejected and the user who created the bounty will be referred to the CCS.
 
 ### In-Scope
   * Github Issues in Monero related repositories
@@ -53,5 +53,6 @@ If a bounty hunter would like to work on an expired bounty, they would leave a c
 
 ## Definitions
 Reviewers = Granted the collaborator role within Fider (who though?)
+
 Expired bounties = bounties that have not been worked on for one year (if work is being done in stealth, progress has to be shown before a year passes)
 
