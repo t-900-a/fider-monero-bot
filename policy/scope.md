@@ -14,7 +14,7 @@ Every posted bounty will have an associated Monero subaddress generated which is
 
 ### Bounties Payout 
 
-The open nature of accepted bounties can often make defining a specific deliverable difficult. Submissions require a tightly defined deliverable which helps dictate when a submission can be considered ["completed"](https://bounties.monero.social/?view=completed) and a bounty can be paid out. Submissions lacking a properly defined deliverable will be tagged as ["undefined"](https://bounties.monero.social/?tags=undefined) by reviewers* and will involve any site visitor to help define the payout criteria more clearly. 
+The open nature of accepted bounties can often make defining a specific deliverable difficult. Submissions require a tightly defined deliverable which helps dictate when a submission can be considered ["completed"](https://bounties.monero.social/?view=completed) and a bounty can be paid out. Submissions lacking a properly defined deliverable will be tagged as ["undefined"](https://bounties.monero.social/?tags=needs-definition) by reviewers* and will involve any site visitor to help define the payout criteria more clearly. 
 
 Once the bounty is complete a comment should be left by the bounty hunter including a link to the deliverable and a statement on how each payout criteria was met. Any site visitor can leave a comment to either reaffirm or raise any concerns involving whether the bounty should be considered complete or not. Discussion will be considered on outside platforms, including Reddit and the Monero Matrix Channels.
 The reviewers* will contact the escrow holder to release funds, once consensus is reached.
@@ -49,6 +49,7 @@ Bounties which have been reviewed and accepted by *reviewers and the site visito
 
 If a bounty hunter would like to work on an expired bounty, they would leave a comment and then a reviewer would remove the "expired" tag. If any funds were previously transferred out of the expired bounty to another bounty, those funds will not be relocated back to the original bounty.
 
+Some bounties will be submitted that may be found to be technically infeasible. Once a subject matter expert comments that the bounty is infeasible the bounty will be tagged as ["Not Feasible"](https://bounties.monero.social/?tags=not-feasible)
 
 
 ## Definitions
