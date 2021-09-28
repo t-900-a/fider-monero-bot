@@ -14,7 +14,7 @@ Every posted bounty will have an associated Monero subaddress generated which is
 
 ### Bounties Payout 
 
-The open nature of accepted bounties can often make defining a specific deliverable difficult. Submissions require a tightly defined deliverable which helps dictate when a submission can be considered ["completed"](https://bounties.monero.social/?view=completed) and a bounty can be paid out. Submissions lacking a properly defined deliverable will be tagged as ["undefined"](https://bounties.monero.social/?tags=needs-definition) by reviewers* and will involve any site visitor to help define the payout criteria more clearly. 
+The open nature of accepted bounties can often make defining a specific deliverable difficult. Submissions require a tightly defined deliverable which helps dictate when a submission can be considered ["completed"](https://bounties.monero.social/?view=completed) and a bounty can be paid out. Submissions lacking a properly defined deliverable will be tagged as ["Needs Definition"](https://bounties.monero.social/?tags=needs-definition) by reviewers* and will involve any site visitor to help define the payout criteria more clearly. 
 
 Once the bounty is complete a comment should be left by the bounty hunter including a link to the deliverable and a statement on how each payout criteria was met. Any site visitor can leave a comment to either reaffirm or raise any concerns involving whether the bounty should be considered complete or not. Discussion will be considered on outside platforms, including Reddit and the Monero Matrix Channels.
 The reviewers* will contact the escrow holder to release funds, once consensus is reached.
