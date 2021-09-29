@@ -53,7 +53,7 @@ Some bounties will be submitted that may be found to be technically infeasible. 
 
 
 ## Definitions
-Reviewers = Granted the collaborator role within Fider (who though?)
+Reviewers = Granted the collaborator role within Fider
 
 Expired bounties = bounties that have not been worked on for one year (if work is being done in stealth, progress has to be shown before a year passes)
 
