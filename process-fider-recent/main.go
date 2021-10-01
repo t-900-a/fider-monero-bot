@@ -72,7 +72,7 @@ func comment(uri string, postNum float64, apiKey string, address *string) (float
 	var png []byte
 	png, err := qrcode.Encode("monero:"+*address, qrcode.Medium, 200)
 	method := "/api/v1/posts/" + strconv.FormatFloat(postNum, 'f', 0, 64) + "/comments"
-	strData := `{"content":"Donate to the address below to fund this bounty \n` + *address + `\nYour donation will be reflected in the comments. \nPayouts will be made once the bounty is complete to the individual(s) who completed the bounty first.",
+	strData := `{"content":"Donate to the address below to fund this bounty \n[` + *address + `](monero:` + *address + `)\nYour donation will be reflected in the comments. \nPayouts will be made once the bounty is complete to the individual(s) who completed the bounty first.",
 		"attachments":[{"upload":{"fileName":"post_` + strconv.FormatFloat(postNum, 'f', 0, 64) + `_qr.png","contentType":"image/png","content":"` + base64.StdEncoding.EncodeToString(png) + `"}}]}`
 	jsonData := []byte(strData)
 	u, _ := url.ParseRequestURI(uri)
