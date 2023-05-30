@@ -3,7 +3,7 @@
 ### What is Monero Bounties ?
 Monero Bounties is a website designed to foster community feedback from users, developers and community stakeholders. It is supplemental / complementary to the existing Monero CCS (Community Crowdfunding System). Users can post bounties for suggested improvements in the monero community. Example bounties could be (but not limited) to the following:
 
-  * Feature reqeusts to existing software
+  * Feature requests to existing software
   * New software creation 
   * Research funding into new crypographic requirements 
   * Art projects that promote Monero
